@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Domain\Repository\ExpenseRepositoryInterface;
-use App\Domain\Repository\UserRepositoryInterface;
-use App\Infrastructure\Persistence\PdoExpenseRepository;
-use App\Infrastructure\Persistence\PdoUserRepository;
-use DI\ContainerBuilder;
-use Monolog\Handler\StreamHandler;
-use Monolog\Level;
-use Monolog\Logger;
-use PDO;
-use Psr\Log\LoggerInterface;
-use Slim\App;
-use Slim\Factory\AppFactory;
-use Slim\Views\Twig;
-use Slim\Views\TwigMiddleware;
-
-use function DI\autowire;
 use function DI\factory;
+use function DI\autowire;
+use Slim\Views\TwigMiddleware;
+use Slim\Views\Twig;
+use Slim\Factory\AppFactory;
+use Slim\App;
+use Psr\Log\LoggerInterface;
+use PDO;
+use Monolog\Logger;
+use Monolog\Level;
+use Monolog\Handler\StreamHandler;
+use DI\ContainerBuilder;
+use App\Infrastructure\Persistence\PdoUserRepository;
+use App\Infrastructure\Persistence\PdoExpenseRepository;
+
+use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\Repository\ExpenseRepositoryInterface;
 
 class Kernel
 {
@@ -34,21 +34,22 @@ class Kernel
             // Define a factory for the Monolog logger with a stream handler that writes to var/app.log
             LoggerInterface::class            => function () {
                 $logger = new Logger('app');
-                $logger->pushHandler(new StreamHandler(__DIR__.'/../var/app.log', Level::Debug));
+                $logger->pushHandler(new StreamHandler(__DIR__ . '/../var/app.log', Level::Debug));
 
                 return $logger;
             },
 
             // Define a factory for Twig view renderer
             Twig::class                       => function () {
-                return Twig::create(__DIR__.'/../templates', ['cache' => false]);
+                return Twig::create(__DIR__ . '/../templates', ['cache' => false]);
             },
 
             // Define a factory for PDO database connection
             PDO::class                        => factory(function () {
                 static $pdo = null;
                 if ($pdo === null) {
-                    $pdo = new PDO('sqlite:'.$_ENV['DB_PATH']);
+                    $pdo = new PDO('sqlite:' . __DIR__ . '/../' . $_ENV['DB_PATH']);
+                    // $pdo = new PDO('sqlite:' . $_ENV['DB_PATH']);
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
                 }
@@ -66,8 +67,8 @@ class Kernel
         AppFactory::setContainer($container);
         $app = AppFactory::create();
         $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
-        (require __DIR__.'/../config/settings.php')($app);
-        (require __DIR__.'/../config/routes.php')($app);
+        (require __DIR__ . '/../config/settings.php')($app);
+        (require __DIR__ . '/../config/routes.php')($app);
 
         // TODO: Handle session initialization
 
