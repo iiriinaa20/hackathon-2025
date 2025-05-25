@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
+use Psr\Http\Message\ResponseInterface as Response;
 
 abstract class BaseController
 {
+    protected $errors = [];
     public function __construct(
         protected Twig $view,
     ) {}
@@ -18,5 +19,16 @@ abstract class BaseController
         return $this->view->render($response, $template, $data);
     }
 
-    // TODO: add here any common controller logic and use in concrete controllers
+    protected function manageErrors(): void
+    {
+        $this->errors = $_SESSION['errors'] ?? [];
+        unset($_SESSION['errors'], $_SESSION['old']);
+    }
+
+    protected function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+
 }
