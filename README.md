@@ -104,10 +104,53 @@ A solution with passing analysis and unit tests will receive extra points.
 ## Delivery details
 
 Participant:
-- Full name: ...
-- Email address: ...
+- Full name: Irina Mihaela Calota
+- Email address: mihaelairina48@yahoo.com
 
 Features fully implemented:
-- ...
+- Register functionality with CSRF and validation (with password hash)
+- Implemented password retype check on register (frontend & backend)
+- Login functionality with CSRF and validation  (with password check)
+- Logout functionality
+- Prevention on Session fixation attacks 
+- Basic CRUD functionalities for expenses
+- Advanced queries for expenses
+- Used pagination and filtering on Expenses Resource
+- Used prepared statements
+- Applied all necessary formating on UI level
+- Used Flash Session for short hand notification messages
+- Used generated Old Session vector for storing user input on validation errors
+- Added overspending allerts and all dashboard functionality
+- Note (on expenses Add the expected value for amount is in decimal unit currency : eg -> 10.50 => amount cents 1050)
+- added option for csv imports
 
-Other instructions about setting up the application (if any): ...
+- added categories and budgets to .env file, updated .env.example for clarity
+- created migration file with optimizations regarding indexes
+- Passed composer analyze results
+
+Where I used AI:
+- on csv import feature 
+  why? : got composer analyze issue regarding cyclomatic complexity 
+       : the time was to short
+
+What I have not done yet:
+- Unit tests (not enough time)
+- Soft Delete flag (not enough time)
+- Evolve the Expense entity (not enough time)
+
+How would I had done these features:
+- Unit tests (not enough time)
+  **  install PhpUnit and start writing basic tests for services and repositories ** 
+- Soft Delete flag (not enough time)
+  **  add a new migration for adding a nullable column deleted_at (timestamp)** 
+  **  modify the entity expense and query to retrieve only not deleted_at entries ** 
+  **  on delete mark the entry as deleted at current timestamp ** 
+  **  implement short undo feature for undoing missclicked deletes, add js confrimation on delete click ** 
+- Evolve the Expense entity (not enough time)
+  **  add a new migration for adding the necessary column ** 
+  **  Note: migration could also select all the amount cents and convert it to amount at SQL LEVEL (define procedure) ** 
+  **  update the entity, update, add relevant queries** 
+  **  Note: since my implementation already works with amount at ui level , remove the conversing from backend eg: remove ammount_cents = amount * 100 ** 
+
+
+Other instructions about setting up the application (if any): None
