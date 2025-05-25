@@ -34,3 +34,4 @@ for sql_file in migration_*.sql; do
 done
 
 echo "Migration process completed."
+sleep 3
