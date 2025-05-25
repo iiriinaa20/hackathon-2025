@@ -1,17 +1,23 @@
 <?php
 
-use App\Controllers\AuthController;
-use App\Controllers\DashboardController;
-use App\Controllers\ExpenseController;
-use Slim\App;
-use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
+use Slim\Psr7\Response;
+use Slim\App;
+use App\Domain\Middleware\CsrfRotateMiddleware;
+use App\Domain\Middleware\CsrfCheckMiddleware;
+use App\Controllers\ExpenseController;
+use App\Controllers\DashboardController;
+use App\Controllers\AuthController;
 
 return static function (App $app) {
     $app->get('/register', [AuthController::class, 'showRegister']);
-    $app->post('/register', [AuthController::class, 'register']);
+    $app->post('/register', [AuthController::class, 'register'])
+        ->add(new CsrfCheckMiddleware())
+        ->add(new CsrfRotateMiddleware());
     $app->get('/login', [AuthController::class, 'showLogin']);
-    $app->post('/login', [AuthController::class, 'login']);
+    $app->post('/login', [AuthController::class, 'login'])
+        ->add(new CsrfCheckMiddleware())
+        ->add(new CsrfRotateMiddleware());
     $app->get('/logout', [AuthController::class, 'logout']);
 
     $app->group('', function (RouteCollectorProxy $firewalled) {

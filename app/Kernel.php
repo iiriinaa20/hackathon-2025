@@ -77,6 +77,7 @@ class Kernel
         $loggedInUserId = null;
         $twig = $container->get(Twig::class);
         $twig->getEnvironment()->addGlobal('currentUserId', $loggedInUserId);
+        $twig->getEnvironment()->addGlobal('csrf_token', $_SESSION['csrf_token']);
 
         return $app;
     }
