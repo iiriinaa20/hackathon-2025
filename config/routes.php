@@ -23,11 +23,13 @@ return static function (App $app) {
     $app->group('', function (RouteCollectorProxy $firewalled) {
         $firewalled->get('/', [DashboardController::class, 'index']);
         $firewalled->group('/expenses', function (RouteCollectorProxy $expense) {
+            $expense->post('/import', [ExpenseController::class, 'import']);
             $expense->get('', [ExpenseController::class, 'index']);
             $expense->get('/create', [ExpenseController::class, 'create']);
             $expense->post('', [ExpenseController::class, 'store']);
             $expense->get('/{id}/edit', [ExpenseController::class, 'edit']);
             $expense->post('/{id}', [ExpenseController::class, 'update']);
+            $expense->get('/all/delete', [ExpenseController::class, 'destroyAll']);
             $expense->post('/{id}/delete', [ExpenseController::class, 'destroy']);
         });
     })
